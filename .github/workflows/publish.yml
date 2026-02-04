@@ -1,0 +1,112 @@
+name: Publish to ClawHub
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 5.11.1)'
+        required: true
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Get version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate SKILL.md
+        run: |
+          echo "Validating SKILL.md..."
+          
+          # Check file exists
+          if [ ! -f SKILL.md ]; then
+            echo "❌ SKILL.md not found"
+            exit 1
+          fi
+          
+          # Check frontmatter
+          if ! head -1 SKILL.md | grep -q "^---"; then
+            echo "❌ Missing YAML frontmatter"
+            exit 1
+          fi
+          
+          # Check version in frontmatter
+          VERSION="${{ steps.version.outputs.version }}"
+          if ! grep -q "version: \"$VERSION\"" SKILL.md; then
+            echo "⚠️ Version mismatch in SKILL.md frontmatter"
+            echo "Expected: $VERSION"
+            echo "Updating frontmatter..."
+            sed -i "s/version: \"[^\"]*\"/version: \"$VERSION\"/" SKILL.md
+          fi
+          
+          echo "✅ SKILL.md validated"
+
+      - name: Install ClawHub CLI
+        run: |
+          npm install -g @clawhub/cli
+          echo "✅ ClawHub CLI installed"
+
+      - name: Publish to ClawHub
+        env:
+          CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          
+          echo "Publishing cc-godmode v$VERSION to ClawHub..."
+          
+          clawdhub publish . \
+            --slug cc-godmode \
+            --name "CC_GodMode Orchestrator" \
+            --version "$VERSION" \
+            --changelog "$(sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | head -n -1)"
+          
+          echo "✅ Published to ClawHub"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body_path: CHANGELOG.md
+          files: |
+            SKILL.md
+            README.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify:
+    needs: publish
+    runs-on: ubuntu-latest
+    if: success()
+    
+    steps:
+      - name: Notify success
+        run: |
+          VERSION="${{ needs.publish.outputs.version || github.event.inputs.version }}"
+          echo "🎉 CC_GodMode Skill v$VERSION published successfully!"
+          echo ""
+          echo "Install with:"
+          echo "  clawdhub install cc-godmode"
+          echo ""
+          echo "Or with specific version:"
+          echo "  clawdhub install cc-godmode@$VERSION"
