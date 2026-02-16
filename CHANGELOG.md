@@ -5,6 +5,22 @@ All notable changes to the CC_GodMode Skill will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.11.3] - 2026-02-16
+
+### Changed
+- Resolved remaining ClawHub scan ambiguity by aligning runtime declarations with actual workflow instructions.
+- Updated `SKILL.md` note to distinguish **docs-only package** from **runtime agent actions**.
+
+### Runtime/Permission Transparency
+- Declared runtime expectations for full workflow usage:
+  - `requires_binaries: true`
+  - `requires_credentials: true`
+  - `requires_network: true`
+- Added explicit `runtime_binaries` (required/optional) and `runtime_credentials` (optional) sections.
+- Clarified security semantics:
+  - No install-time executable payload
+  - Agent runtime may execute shell/network operations when user invokes workflows.
+
 ## [5.11.2] - 2026-02-16
 
 ### Changed

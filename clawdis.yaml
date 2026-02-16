@@ -3,7 +3,7 @@
 # It guides the agent's workflow but does NOT execute code itself.
 
 name: cc-godmode
-version: 5.11.2
+version: 5.11.3
 description: "Self-orchestrating multi-agent development workflows. You say WHAT, the AI decides HOW."
 
 author:
@@ -14,18 +14,34 @@ license: MIT
 repository: https://github.com/cubetribe/openclaw-godmode-skill
 
 # Skill type: documentation-only orchestrator
-# This skill provides workflow instructions for OpenClaw agents.
-# It does NOT include executable scripts or require external binaries.
+# This package itself is docs-only (no install-time executable payload).
+# At runtime, agents following these workflows can use shell/network tools.
 type: orchestration-docs
 
-# Runtime requirements - NONE
-# This is a pure documentation skill. All referenced tools (Read, Write, Bash, etc.)
-# are standard OpenClaw agent capabilities, not external dependencies.
-# The skill instructs agents HOW to use their existing tools, it doesn't add new ones.
+# Runtime expectations for FULL workflow usage
 runtime:
-  requires_binaries: false
-  requires_credentials: false
-  requires_network: false
+  requires_binaries: true
+  requires_credentials: true
+  requires_network: true
+
+runtime_binaries:
+  required:
+    - bash
+    - git
+    - grep
+  optional:
+    - node
+    - npm
+    - tsc
+    - gh
+    - playwright
+    - lighthouse
+
+runtime_credentials:
+  optional:
+    - GH_TOKEN (for GitHub operations)
+    - Claude/Anthropic auth (if using Claude Code workflows)
+    - MCP server auth/config (if applicable)
   
 # Tools referenced in documentation (for transparency)
 # These are standard OpenClaw tools, not external dependencies
@@ -46,10 +62,10 @@ model_examples:
 
 # Security notes
 security:
-  executes_code: false
-  modifies_system: false
-  network_access: false
-  file_operations: "documentation only - instructs agent, doesn't execute"
+  install_time_executes_code: false
+  runtime_agent_executes_code: true
+  runtime_agent_network_access: true
+  file_operations: "agent-runtime only; package itself is docs"
   
 tags:
   - orchestration
