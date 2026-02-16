@@ -1,0 +1,59 @@
+# CC_GodMode Skill - ClawHub Manifest
+# This skill is a documentation/orchestration layer only.
+# It guides the agent's workflow but does NOT execute code itself.
+
+name: cc-godmode
+version: 5.11.2
+description: "Self-orchestrating multi-agent development workflows. You say WHAT, the AI decides HOW."
+
+author:
+  name: cubetribe
+  github: https://github.com/cubetribe
+
+license: MIT
+repository: https://github.com/cubetribe/openclaw-godmode-skill
+
+# Skill type: documentation-only orchestrator
+# This skill provides workflow instructions for OpenClaw agents.
+# It does NOT include executable scripts or require external binaries.
+type: orchestration-docs
+
+# Runtime requirements - NONE
+# This is a pure documentation skill. All referenced tools (Read, Write, Bash, etc.)
+# are standard OpenClaw agent capabilities, not external dependencies.
+# The skill instructs agents HOW to use their existing tools, it doesn't add new ones.
+runtime:
+  requires_binaries: false
+  requires_credentials: false
+  requires_network: false
+  
+# Tools referenced in documentation (for transparency)
+# These are standard OpenClaw tools, not external dependencies
+documented_tools:
+  - Read        # Standard file reading
+  - Write       # Standard file writing  
+  - Edit        # Standard file editing
+  - Bash        # Standard shell (exec)
+  - Glob        # File pattern matching
+  - Grep        # Text search
+  - WebSearch   # Built-in web search
+  - WebFetch    # Built-in URL fetching
+
+# Agent models mentioned are EXAMPLES
+# Users configure their own models in OpenClaw config
+model_examples:
+  note: "Model names (opus, sonnet, haiku) are illustrative examples. Actual models depend on user's OpenClaw configuration."
+
+# Security notes
+security:
+  executes_code: false
+  modifies_system: false
+  network_access: false
+  file_operations: "documentation only - instructs agent, doesn't execute"
+  
+tags:
+  - orchestration
+  - multi-agent
+  - development
+  - workflow
+  - documentation

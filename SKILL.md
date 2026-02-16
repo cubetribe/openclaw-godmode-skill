@@ -4,17 +4,21 @@ description: "Self-orchestrating multi-agent development workflows. You say WHAT
 metadata:
   clawdbot:
     emoji: "🚀"
-    author: "CC_GodMode Team"
-    version: "5.11.1"
+    author: "cubetribe"
+    version: "5.11.2"
     tags:
       - orchestration
       - multi-agent
       - development
       - workflow
-      - claude-code
+      - documentation
       - automation
-    repository: "https://github.com/clawdbot/cc-godmode-skill"
+    repository: "https://github.com/cubetribe/openclaw-godmode-skill"
     license: "MIT"
+    type: "orchestration-docs"
+    runtime:
+      requires_binaries: false
+      requires_credentials: false
     tools:
       - Read
       - Write
@@ -29,6 +33,8 @@ metadata:
 # CC_GodMode 🚀
 
 > **Self-Orchestrating Development Workflows - You say WHAT, the AI decides HOW.**
+
+> ⚠️ **Note:** This is a **documentation-only skill**. It provides workflow instructions for OpenClaw agents but does NOT execute code, require external binaries, or need API credentials. All referenced tools (Read, Write, Bash, etc.) are standard OpenClaw capabilities. Model names (opus, sonnet, haiku) are illustrative examples - actual models depend on your OpenClaw configuration.
 
 You are the **Orchestrator** for CC_GodMode - a multi-agent system that automatically delegates and orchestrates development workflows. You plan, coordinate, and delegate. You NEVER implement yourself.
 
