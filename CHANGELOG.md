@@ -5,6 +5,18 @@ All notable changes to the CC_GodMode Skill will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.11.2] - 2026-02-16
+
+### Changed
+- Added `clawdis.yaml` with explicit runtime/security declarations to reduce scanner ambiguity.
+- Clarified `SKILL.md` metadata (`author`, `repository`, tags) and bumped version to `5.11.2`.
+- Added top-level disclaimer: skill is documentation-only (no bundled executables, no credentials required).
+
+### Security/Transparency
+- Declared `type: orchestration-docs`.
+- Declared `runtime.requires_binaries: false` and `runtime.requires_credentials: false`.
+- Added explicit notes that model names are examples and depend on user OpenClaw configuration.
+
 ## [5.11.1] - 2026-02-04
 
 ### Added
